@@ -1,3 +1,5 @@
+RUN_APP=docker compose exec app poetry run flask --app main
+
 prepare:
 	docker compose up -d --build
 
@@ -9,3 +11,9 @@ build:
 
 down:
 	docker compose down
+
+routes:
+	${RUN_APP} routes
+
+shell:
+	${RUN_APP} shell
