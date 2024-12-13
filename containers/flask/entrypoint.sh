@@ -1,1 +1,1 @@
-poetry run flask --app main run -h 0.0.0.0 -p 8000
+poetry run flask --app main run --debug -h 0.0.0.0 -p 8000
