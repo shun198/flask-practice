@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "flask-practice"
+version = "0.1.0"
+description = ""
+authors = ["shun198 <shunhiroseluvmri@gmail.com>"]
+readme = "README.md"
+packages = [{include = "flask_practice"}]
+
+[tool.poetry.dependencies]
+python = "3.12.8"
+flask = "^3.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
