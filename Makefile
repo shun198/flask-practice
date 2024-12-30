@@ -17,3 +17,7 @@ routes:
 
 shell:
 	${RUN_APP} shell
+
+format:
+	docker compose exec app poetry run black .
+	docker compose exec app poetry run isort .
