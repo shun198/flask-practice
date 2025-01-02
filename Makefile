@@ -21,3 +21,9 @@ shell:
 format:
 	docker compose exec app poetry run black .
 	docker compose exec app poetry run isort .
+
+migrate:
+	${RUN_APP} db migrate
+
+upgrade:
+	${RUN_APP} db upgrade
