@@ -1,0 +1,32 @@
+# https://swagger.io/specification/
+openapi: "3.0.0"
+# APIに関するメタデータ
+info:
+  title: project
+  description: |-
+    # プロジェクトの詳細
+  version: 1.0.0
+
+tags:
+  - name: health
+    description: ヘルスチェックAPI
+
+paths:
+  /api/health:
+    get:
+      tags:
+        - health
+      summary: ヘルスチェックAPI
+      description: APIサーバー単独でのヘルスチェック
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: ステータス
+                    example: pass

@@ -16,6 +16,7 @@ sqlalchemy = "^2.0.36"
 
 
 [tool.poetry.group.dev.dependencies]
+flask-swagger-ui = "^4.11.1"
 black = "^24.10.0"
 isort = "^5.13.2"
 
