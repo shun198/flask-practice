@@ -30,3 +30,216 @@ paths:
                     type: string
                     description: ステータス
                     example: pass
+  /api/users:
+    get:
+      tags:
+        - users
+      summary: システムユーザの一覧表示API
+      description: システムユーザを一覧表示する
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+              properties:
+                id:
+                  type: integer
+                  description: id
+                name:
+                  type: string
+                  description: ユーザ名
+                email:
+                  type: string
+                  description: メールアドレス
+              examples:
+                user_example:
+                  value:
+                    - id: 1
+                      name: "test01"
+                      email: "test01@example.com"
+                    - id: 2
+                      name: "test02"
+                      email: "test02@example.com"
+                    - id: 3
+                      name: "test03"
+                      email: "test03@example.com"
+    post:
+      tags:
+        - users
+      summary: システムユーザの登録API
+      description: システムユーザを登録する
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ユーザ名
+                  example: "test05"
+                email:
+                  type: string
+                  description: メールアドレス
+                  example: "test05@example.com"
+              required:
+                - "name"
+                - "email"
+      responses:
+        '201':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                id: "Random ID"
+                name: "test05"
+                email: "test05@example.com"
+        '400':
+          description: 該当するメールアドレスがすでに存在する時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Error message
+                    example: "すでに存在するメールアドレスです"
+  /api/users/{user_id}:
+    get:
+      tags:
+        - users
+      summary: システムユーザの詳細表示API
+      description: システムユーザの詳細を表示するAPI
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 該当するユーザが存在する時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: User ID
+                  name:
+                    type: string
+                    description: User name
+                  email:
+                    type: string
+                    description: User email
+              examples:
+                example:
+                  value:
+                    id: 1
+                    name: "Alice"
+                    email: "alice@example.com"
+        '404':
+          description: 該当するユーザが存在しない時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Error message
+                    example: "該当するユーザが存在しません"
+    put:
+      tags:
+        - users
+      summary: システムユーザの更新API
+      description: システムユーザを更新するAPI
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Updated user name
+                  example: "Updated Alice"
+                email:
+                  type: string
+                  description: Updated user email
+                  example: "updated_alice@example.com"
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: User ID
+                  name:
+                    type: string
+                    description: User name
+                  email:
+                    type: string
+                    description: User email
+              examples:
+                example:
+                  value:
+                    id: 1
+                    name: "Updated Alice"
+                    email: "updated_alice@example.com"
+        '404':
+          description: 該当するユーザが存在しない時
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Error message
+                    example: "該当するユーザが存在しません"
+    delete:
+      tags:
+        - users
+      summary: Delete a user by ID
+      description: Remove a user from the system by their ID.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: ユーザの削除に成功
+        '404':
+          description: 該当するユーザが存在しません
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Error message
+                    example: "該当するユーザが存在しません"
