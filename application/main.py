@@ -5,6 +5,9 @@ from flask import Flask, jsonify, request
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_swagger_ui import get_swaggerui_blueprint
+from marshmallow import ValidationError
+
+from schemas import partial_user_schema, user_schema
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URL")
@@ -62,9 +65,13 @@ def get_user(user_id):
 
 @app.route("/api/users", methods=["POST"])
 def create_user():
-    data = request.get_json()
-    if not data or not data.get("name") or not data.get("email"):
-        return jsonify({"msg": "Invalid input"}), HTTPStatus.BAD_REQUEST
+    try:
+        data = user_schema.load(request.get_json())
+    except ValidationError as err:
+        return (
+            jsonify({"msg": "Invalid input", "errors": err.messages}),
+            HTTPStatus.BAD_REQUEST,
+        )
 
     if User.query.filter_by(email=data["email"]).first():
         return (
@@ -72,10 +79,56 @@ def create_user():
             HTTPStatus.BAD_REQUEST,
         )
 
-    new_user = User(name=data["name"], email=data["email"])
+    new_user = User(**data)
     db.session.add(new_user)
     db.session.commit()
     return jsonify(new_user.to_dict()), HTTPStatus.CREATED
+
+
+@app.route("/api/users/<int:user_id>", methods=["PUT"])
+def update_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return (
+            jsonify({"msg": "該当するユーザが存在しません"}),
+            HTTPStatus.NOT_FOUND,
+        )
+
+    try:
+        data = user_schema.load(request.get_json())
+    except ValidationError as err:
+        return (
+            jsonify({"msg": "Invalid input", "errors": err.messages}),
+            HTTPStatus.BAD_REQUEST,
+        )
+
+    user.name = data["name"]
+    user.email = data["email"]
+    db.session.commit()
+    return jsonify(user.to_dict()), HTTPStatus.OK
+
+
+@app.route("/api/users/<int:user_id>", methods=["PATCH"])
+def patch_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return (
+            jsonify({"msg": "該当するユーザが存在しません"}),
+            HTTPStatus.NOT_FOUND,
+        )
+
+    try:
+        data = partial_user_schema.load(request.get_json())
+    except ValidationError as err:
+        return (
+            jsonify({"msg": "Invalid input", "errors": err.messages}),
+            HTTPStatus.BAD_REQUEST,
+        )
+
+    for key, value in data.items():
+        setattr(user, key, value)
+    db.session.commit()
+    return jsonify(user.to_dict()), HTTPStatus.OK
 
 
 @app.route("/api/users/<int:user_id>", methods=["DELETE"])
