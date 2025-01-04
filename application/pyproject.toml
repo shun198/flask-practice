@@ -20,6 +20,8 @@ flask-marshmallow = "^1.2.1"
 flask-swagger-ui = "^4.11.1"
 black = "^24.10.0"
 isort = "^5.13.2"
+flask-restx = "^1.3.0"
+flask-debugtoolbar = "^0.16.0"
 
 [build-system]
 requires = ["poetry-core"]

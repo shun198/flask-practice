@@ -7,5 +7,6 @@ class UserSchema(Schema):
     email = fields.Email(required=True)
 
 
+# https://github.com/marshmallow-code/flask-marshmallow
 user_schema = UserSchema()
 partial_user_schema = UserSchema(partial=True)

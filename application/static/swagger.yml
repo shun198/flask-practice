@@ -147,15 +147,6 @@ paths:
                     email: "alice@example.com"
         '404':
           description: 該当するユーザが存在しない時
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    description: Error message
-                    example: "該当するユーザが存在しません"
     put:
       tags:
         - users
@@ -208,15 +199,6 @@ paths:
                     email: "updated_alice@example.com"
         '404':
           description: 該当するユーザが存在しない時
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    description: Error message
-                    example: "該当するユーザが存在しません"
     patch:
       tags:
         - users
@@ -269,15 +251,6 @@ paths:
                     email: "updated_alice@example.com"
         '404':
           description: 該当するユーザが存在しない時
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    description: Error message
-                    example: "該当するユーザが存在しません"
     delete:
       tags:
         - users
@@ -295,12 +268,3 @@ paths:
           description: ユーザの削除に成功
         '404':
           description: 該当するユーザが存在しません
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    description: Error message
-                    example: "該当するユーザが存在しません"

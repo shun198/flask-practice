@@ -19,8 +19,6 @@
                 "0.0.0.0",
                 "-p",
                 "8080",
-                "--no-debugger",
-                "--no-reload"
             ],
             "justMyCode": false,
             "jinja": true,

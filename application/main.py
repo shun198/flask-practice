@@ -48,18 +48,15 @@ def health():
 
 @app.route("/api/users", methods=["GET"])
 def get_users():
-    users = User.query.all()
+    # https://docs.sqlalchemy.org/en/20/orm/queryguide/select.html#selecting-orm-entities
+    users = User.query.all().order_by(User.id)
     return jsonify([user.to_dict() for user in users]), HTTPStatus.OK
 
 
 @app.route("/api/users/<int:user_id>", methods=["GET"])
 def get_user(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return (
-            jsonify({"msg": "該当するユーザが存在しません"}),
-            HTTPStatus.NOT_FOUND,
-        )
+    # https://flask-sqlalchemy.readthedocs.io/en/stable/queries/#queries-for-views
+    user = User.query.get_or_404(user_id)
     return jsonify(user.to_dict()), HTTPStatus.OK
 
 
@@ -80,6 +77,7 @@ def create_user():
         )
 
     new_user = User(**data)
+    # https://flask-sqlalchemy.readthedocs.io/en/stable/queries/#modifying-and-querying-data
     db.session.add(new_user)
     db.session.commit()
     return jsonify(new_user.to_dict()), HTTPStatus.CREATED
@@ -87,13 +85,7 @@ def create_user():
 
 @app.route("/api/users/<int:user_id>", methods=["PUT"])
 def update_user(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return (
-            jsonify({"msg": "該当するユーザが存在しません"}),
-            HTTPStatus.NOT_FOUND,
-        )
-
+    user = User.query.get_or_404(user_id)
     try:
         data = user_schema.load(request.get_json())
     except ValidationError as err:
@@ -104,6 +96,7 @@ def update_user(user_id):
 
     user.name = data["name"]
     user.email = data["email"]
+    # https://flask-sqlalchemy.readthedocs.io/en/stable/queries/#modifying-and-querying-data
     db.session.commit()
     return jsonify(user.to_dict()), HTTPStatus.OK
 
@@ -127,19 +120,15 @@ def patch_user(user_id):
 
     for key, value in data.items():
         setattr(user, key, value)
+    # https://flask-sqlalchemy.readthedocs.io/en/stable/queries/#modifying-and-querying-data
     db.session.commit()
     return jsonify(user.to_dict()), HTTPStatus.OK
 
 
 @app.route("/api/users/<int:user_id>", methods=["DELETE"])
 def delete_user(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return (
-            jsonify({"msg": "該当するユーザが存在しません"}),
-            HTTPStatus.NOT_FOUND,
-        )
-
+    user = User.query.get_or_404(user_id)
+    # https://flask-sqlalchemy.readthedocs.io/en/stable/queries/#modifying-and-querying-data
     db.session.delete(user)
     db.session.commit()
     return "", HTTPStatus.NO_CONTENT
