@@ -98,7 +98,11 @@ def update_user(user_id):
             jsonify({"msg": "Invalid input", "errors": err.messages}),
             HTTPStatus.BAD_REQUEST,
         )
-
+    if User.query.filter_by(email=data["email"]).first():
+        return (
+            jsonify({"msg": "すでに存在するメールアドレスです"}),
+            HTTPStatus.BAD_REQUEST,
+        )
     user.name = data["name"]
     user.email = data["email"]
     # https://flask-sqlalchemy.readthedocs.io/en/stable/queries/#modifying-and-querying-data
