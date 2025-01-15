@@ -2,15 +2,17 @@ import os
 from http import HTTPStatus
 
 from flask import Flask, jsonify, request
+from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_swagger_ui import get_swaggerui_blueprint
 from marshmallow import ValidationError
-
 from schemas import partial_user_schema, user_schema
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URL")
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+toolbar = DebugToolbarExtension(app)
 db = SQLAlchemy()
 db.init_app(app)
 # https://flask-migrate.readthedocs.io/en/latest/#api-reference
