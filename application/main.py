@@ -10,8 +10,11 @@ from marshmallow import ValidationError
 from schemas import partial_user_schema, user_schema
 
 app = Flask(__name__)
+app.debug = os.environ.get("DEBUG")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URL")
+app.config['SQLALCHEMY_ECHO'] = True
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+app.config["SQLALCHEMY_RECORD_QUERIES"] = True
 toolbar = DebugToolbarExtension(app)
 db = SQLAlchemy()
 db.init_app(app)
@@ -51,7 +54,7 @@ def health():
 @app.route("/api/users", methods=["GET"])
 def get_users():
     # https://docs.sqlalchemy.org/en/20/orm/queryguide/select.html#selecting-orm-entities
-    users = User.query.all().order_by(User.id)
+    users = User.query.all()
     return jsonify([user.to_dict() for user in users]), HTTPStatus.OK
 
 
